@@ -7,7 +7,7 @@ A modern, beautiful group travel management application built with React, TypeSc
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-blue)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3.4.11-blue)
 
-## ✨ Features
+## ✨  Features
 
 - 🔐 **Secure Authentication** - JWT-based auth with refresh tokens
 - 🏠 **Modern Dashboard** - Beautiful overview with stats and activity
@@ -17,7 +17,7 @@ A modern, beautiful group travel management application built with React, TypeSc
 - 🎨 **Beautiful UI** - Modern glass-morphism design with smooth animations
 - 🚀 **Performance** - Optimized with code splitting and lazy loading
 
-## 🚀 Quick Start
+## 🚀  Quick Start
 
 ### Prerequisites
 
@@ -47,7 +47,7 @@ npm run dev
 
 The app will be available at `http://localhost:5173`
 
-## 📁 Project Structure
+## 📁  Project Structure
 
 ```
 src/
@@ -64,7 +64,7 @@ src/
 └── types/              # TypeScript type definitions
 ```
 
-## 🔧 Available Scripts
+## 🔧  Available Scripts
 
 ```bash
 # Development
@@ -80,7 +80,7 @@ npm run typecheck    # Run TypeScript checks
 npm run test         # Run tests
 ```
 
-## 🌐 Backend Integration
+## 🌐  Backend Integration
 
 ### Required API Endpoints
 
@@ -123,7 +123,7 @@ Your Spring Boot backend should implement:
 }
 ```
 
-## 🎨 Design System
+## 🎨  Design System
 
 ### Colors
 
@@ -143,7 +143,7 @@ Your Spring Boot backend should implement:
 - Responsive design patterns
 - Accessible UI components
 
-## 🚀 Deployment
+## 🚀  Deployment
 
 ### Vercel (Recommended)
 
@@ -175,7 +175,7 @@ npm run build
 # Deploy the dist/ folder to your hosting provider
 ```
 
-## 🔒 Security Features
+## 🔒  Security Features
 
 - JWT token management with automatic refresh
 - Protected routes with authentication guards
@@ -183,7 +183,7 @@ npm run build
 - XSS protection
 - Secure API communication
 
-## 🧪 Testing
+## 🧪  Testing
 
 ```bash
 # Run unit tests
@@ -196,14 +196,14 @@ npm run test:coverage
 npm run typecheck
 ```
 
-## 📊 Performance
+## 📊  Performance
 
 - **Code Splitting**: Automatic route-based splitting
 - **Lazy Loading**: Components loaded on demand
 - **Optimized Bundle**: Tree-shaking and minification
 - **Image Optimization**: WebP format with fallbacks
 
-## 🛠️ Development Tips
+## 🛠️  Development Tips
 
 ### API Integration
 
@@ -224,7 +224,7 @@ npm run typecheck
 - Use the `cn()` utility for conditional classes
 - Implement hover and focus states
 
-## 🤝 Contributing
+## 🤝  Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -232,11 +232,11 @@ npm run typecheck
 4. Add tests if needed
 5. Submit a pull request
 
-## 📝 License
+## 📝  License
 
 This project is licensed under the MIT License.
 
-## 🆘 Support
+## 🆘  Support
 
 If you encounter any issues:
 
