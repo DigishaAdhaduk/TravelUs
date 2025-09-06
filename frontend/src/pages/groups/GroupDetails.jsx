@@ -1,190 +1,272 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  Users,
+  Receipt,
+  MessageCircle,
+  FileText,
+  UserPlus,
+  Share2,
+} from "lucide-react";
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
+import { groupsAPI, expensesAPI } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 
-const groupsData = [
-  {
-    id: 1,
-    name: "Goa Trip",
-    members: ["Alice", "Bob", "Charlie", "David", "Eva"],
-    documents: ["itinerary.pdf", "expenses.xlsx"],
-    chat: [
-      { user: "Alice", message: "Ready for the trip?" },
-      { user: "Bob", message: "Yes, can't wait!" },
-    ],
-    plan: [
-      { name: "Flight to Goa", date: "2025-06-20", time: "10:00", location: "Mumbai Airport" },
-      { name: "Check-in Hotel", date: "2025-06-20", time: "13:00", location: "Beach Resort" },
-    ],
-  },
-];
+const GroupDetails = () => {
+  const navigate = useNavigate();
+  const { id: groupId } = useParams();
+  const { user } = useAuth();
+  const [group, setGroup] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [inviteLink, setInviteLink] = useState("");
+  const [showInviteLink, setShowInviteLink] = useState(false);
 
-export default function GroupDetailPage() {
-  const [activeGroup] = useState(groupsData[0]);
-  const [activeTab, setActiveTab] = useState("overview");
-  const [newDoc, setNewDoc] = useState("");
-  const [chatMsg, setChatMsg] = useState("");
-  const [tripItem, setTripItem] = useState({ name: "", date: "", time: "", location: "" });
+  useEffect(() => {
+    loadGroupDetails();
+  }, [groupId]);
 
-  const handleAddDocument = () => {
-    if (newDoc.trim()) {
-      activeGroup.documents.push(newDoc.trim());
-      setNewDoc("");
+  const loadGroupDetails = async () => {
+    try {
+      setIsLoading(true);
+      const groupData = await groupsAPI.getGroup(parseInt(groupId));
+      setGroup(groupData);
+    } catch (error) {
+      console.error("Error loading group details:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleAddMessage = () => {
-    if (chatMsg.trim()) {
-      activeGroup.chat.push({ user: "You", message: chatMsg.trim() });
-      setChatMsg("");
+  const handleInviteMembers = async () => {
+    try {
+      const response = await groupsAPI.inviteToGroup(parseInt(groupId));
+      setInviteLink(response);
+      setShowInviteLink(true);
+    } catch (error) {
+      console.error("Error generating invite link:", error);
     }
   };
 
-  const handleAddTripItem = () => {
-    if (tripItem.name && tripItem.date && tripItem.time && tripItem.location) {
-      activeGroup.plan.push(tripItem);
-      setTripItem({ name: "", date: "", time: "", location: "" });
-    }
+  const copyInviteLink = () => {
+    navigator.clipboard.writeText(inviteLink);
+    // Could add toast notification here
   };
 
-  const tabs = ["overview", "members", "documents", "chat", "trip plan"];
-
-  return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="w-1/5 bg-[#192166] text-white p-6">
-        <h2 className="text-2xl font-bold mb-6">Group</h2>
-        <h3 className="text-lg font-semibold">{activeGroup.name}</h3>
-        <ul className="mt-8 space-y-2">
-          {tabs.map((tab) => (
-            <li
-              key={tab}
-              className={`capitalize cursor-pointer px-3 py-2 rounded-md ${
-                activeTab === tab ? "bg-[#525c9c]" : "hover:bg-[#3c448f]"
-              }`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </li>
-          ))}
-        </ul>
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-travel-blue/5">
+        <Navbar />
+        <div className="flex pt-16">
+          <Sidebar />
+          <div className="flex-1 ml-64 p-8 flex items-center justify-center">
+            <div className="text-center">
+              <div className="w-8 h-8 border-2 border-travel-blue border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-travel-blue/70">Loading group details...</p>
+            </div>
+          </div>
+        </div>
       </div>
+    );
+  }
 
-      <div className="w-4/5 p-8">
-        <h2 className="text-3xl font-bold text-[#192166] mb-6">
-          {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-        </h2>
-        <div className="p-6 bg-white rounded-md shadow-md">
-          {activeTab === "overview" && (
-            <p className="text-gray-700 text-lg">
-              Welcome to the {activeGroup.name} group! View members, share documents, chat, and plan your trip here.
-            </p>
-          )}
-
-          {activeTab === "members" && (
-            <ul className="list-disc pl-5 space-y-1 text-gray-700">
-              {activeGroup.members.map((member, idx) => (
-                <li key={idx}>{member}</li>
-              ))}
-            </ul>
-          )}
-
-          {activeTab === "documents" && (
-            <div className="space-y-4">
-              <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                {activeGroup.documents.map((doc, idx) => (
-                  <li key={idx}>{doc}</li>
-                ))}
-              </ul>
-              <div className="flex gap-2 mt-4">
-                <input
-                  type="text"
-                  value={newDoc}
-                  onChange={(e) => setNewDoc(e.target.value)}
-                  placeholder="Enter document name"
-                  className="border px-3 py-2 rounded w-full"
-                />
-                <button
-                  onClick={handleAddDocument}
-                  className="bg-[#192166] text-white px-4 py-2 rounded"
-                >
-                  Upload
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "chat" && (
-            <div className="space-y-4">
-              <div className="space-y-3 text-gray-700">
-                {activeGroup.chat.map((msg, idx) => (
-                  <div key={idx} className="border-b pb-2">
-                    <strong>{msg.user}:</strong> {msg.message}
-                  </div>
-                ))}
-              </div>
-              <div className="flex gap-2 mt-4">
-                <input
-                  type="text"
-                  value={chatMsg}
-                  onChange={(e) => setChatMsg(e.target.value)}
-                  placeholder="Enter message"
-                  className="border px-3 py-2 rounded w-full"
-                />
-                <button
-                  onClick={handleAddMessage}
-                  className="bg-[#192166] text-white px-4 py-2 rounded"
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "trip plan" && (
-            <div className="space-y-6">
-              <ul className="text-gray-700 space-y-2">
-                {activeGroup.plan.map((item, idx) => (
-                  <li key={idx} className="border rounded p-3">
-                    <strong>{item.name}</strong> — {item.date} {item.time}, {item.location}
-                  </li>
-                ))}
-              </ul>
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Activity"
-                  value={tripItem.name}
-                  onChange={(e) => setTripItem({ ...tripItem, name: e.target.value })}
-                  className="border px-3 py-2 rounded"
-                />
-                <input
-                  type="date"
-                  value={tripItem.date}
-                  onChange={(e) => setTripItem({ ...tripItem, date: e.target.value })}
-                  className="border px-3 py-2 rounded"
-                />
-                <input
-                  type="time"
-                  value={tripItem.time}
-                  onChange={(e) => setTripItem({ ...tripItem, time: e.target.value })}
-                  className="border px-3 py-2 rounded"
-                />
-                <input
-                  type="text"
-                  placeholder="Location"
-                  value={tripItem.location}
-                  onChange={(e) => setTripItem({ ...tripItem, location: e.target.value })}
-                  className="border px-3 py-2 rounded"
-                />
-              </div>
+  if (!group) {
+    return (
+      <div className="min-h-screen bg-travel-blue/5">
+        <Navbar />
+        <div className="flex pt-16">
+          <Sidebar />
+          <div className="flex-1 ml-64 p-8">
+            <div className="text-center py-12">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Group not found
+              </h3>
+              <p className="text-gray-600 mb-4">
+                The group you're looking for doesn't exist or you don't have
+                access.
+              </p>
               <button
-                onClick={handleAddTripItem}
-                className="mt-2 bg-[#192166] text-white px-4 py-2 rounded"
+                onClick={() => navigate("/groups")}
+                className="bg-travel-blue text-white px-4 py-2 rounded-lg hover:bg-travel-purple transition-colors"
               >
-                Add Item
+                Back to Groups
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const isAdmin = group.adminUsername === user?.username;
+
+  return (
+    <div className="min-h-screen bg-travel-blue/5">
+      <Navbar />
+      <div className="flex pt-16">
+        <Sidebar />
+
+        <div className="flex-1 ml-64 p-8">
+          {/* Header */}
+          <div className="mb-8">
+            <button
+              onClick={() => navigate("/groups")}
+              className="flex items-center gap-2 text-travel-blue hover:text-travel-purple mb-4 transition-colors"
+            >
+              <ArrowLeft size={20} />
+              Back to Groups
+            </button>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-travel-blue/10 rounded-xl flex items-center justify-center">
+                  <Users className="text-travel-blue" size={24} />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900">
+                    {group.groupName}
+                  </h1>
+                  <p className="text-gray-600">
+                    {group.members.length} members • Admin:{" "}
+                    {group.adminUsername}
+                  </p>
+                </div>
+              </div>
+
+              {isAdmin && (
+                <button
+                  onClick={handleInviteMembers}
+                  className="flex items-center gap-2 bg-travel-blue text-white px-6 py-2 rounded-lg hover:bg-travel-purple transition-colors"
+                >
+                  <UserPlus size={18} />
+                  Invite Members
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Invite Link Modal */}
+          {showInviteLink && (
+            <div className="mb-8 bg-white rounded-2xl shadow-sm border border-travel-blue/10 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Invite Members
+                </h3>
+                <button
+                  onClick={() => setShowInviteLink(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={inviteLink}
+                  readOnly
+                  className="flex-1 px-4 py-3 border border-travel-blue/20 rounded-lg bg-gray-50 text-gray-700"
+                />
+                <button
+                  onClick={copyInviteLink}
+                  className="px-4 py-3 bg-travel-blue text-white rounded-lg hover:bg-travel-purple transition-colors"
+                >
+                  Copy
+                </button>
+              </div>
+              <p className="text-sm text-gray-500 mt-2">
+                Share this link with people you want to invite to your group
+              </p>
+            </div>
           )}
+
+          {/* Group Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <button
+              onClick={() => navigate(`/groups/${groupId}/expenses`)}
+              className="p-6 bg-white rounded-2xl shadow-sm border border-travel-blue/10 hover:border-travel-blue hover:bg-travel-blue/5 transition-all text-left group"
+            >
+              <div className="w-12 h-12 bg-travel-blue rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Receipt className="text-white" size={24} />
+              </div>
+              <h3 className="font-semibold text-gray-900 group-hover:text-travel-blue transition-colors">
+                Expenses
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">
+                Track and manage expenses
+              </p>
+            </button>
+
+            <button
+              onClick={() => navigate(`/groups/${groupId}/chat`)}
+              className="p-6 bg-white rounded-2xl shadow-sm border border-travel-blue/10 hover:border-travel-blue hover:bg-travel-blue/5 transition-all text-left group"
+            >
+              <div className="w-12 h-12 bg-travel-blue rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <MessageCircle className="text-white" size={24} />
+              </div>
+              <h3 className="font-semibold text-gray-900 group-hover:text-travel-blue transition-colors">
+                Chat
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">Group communication</p>
+            </button>
+
+            <button
+              onClick={() => navigate(`/groups/${groupId}/documents`)}
+              className="p-6 bg-white rounded-2xl shadow-sm border border-travel-blue/10 hover:border-travel-blue hover:bg-travel-blue/5 transition-all text-left group"
+            >
+              <div className="w-12 h-12 bg-travel-blue rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <FileText className="text-white" size={24} />
+              </div>
+              <h3 className="font-semibold text-gray-900 group-hover:text-travel-blue transition-colors">
+                Documents
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">Manage group files</p>
+            </button>
+
+            <button
+              onClick={() => navigate("/expenses/add")}
+              className="p-6 bg-white rounded-2xl shadow-sm border border-travel-blue/10 hover:border-travel-blue hover:bg-travel-blue/5 transition-all text-left group"
+            >
+              <div className="w-12 h-12 bg-travel-blue rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Share2 className="text-white" size={24} />
+              </div>
+              <h3 className="font-semibold text-gray-900 group-hover:text-travel-blue transition-colors">
+                Add Expense
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">Record new expense</p>
+            </button>
+          </div>
+
+          {/* Members List */}
+          <div className="bg-white rounded-2xl shadow-sm border border-travel-blue/10 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Group Members ({group.members.length})
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {group.members.map((member, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg"
+                >
+                  <div className="w-10 h-10 bg-travel-blue/10 rounded-full flex items-center justify-center">
+                    <span className="font-medium text-travel-blue">
+                      {member.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{member}</p>
+                    {member === group.adminUsername && (
+                      <p className="text-xs text-travel-blue">Admin</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default GroupDetails;

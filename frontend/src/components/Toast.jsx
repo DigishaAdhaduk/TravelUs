@@ -1,29 +1,50 @@
-import React, { useEffect } from "react";
-import { XCircle } from "lucide-react";
+import React from "react";
+import PropTypes from "prop-types";
 
-export default function Toast({ message, type = "success", onClose, duration = 3000 }) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, duration);
-    return () => clearTimeout(timer);
-  }, [onClose, duration]);
+const Toast = ({ message, type = "info", isVisible, onClose }) => {
+  if (!isVisible) return null;
 
-  const bgColor = {
-    success: "bg-green-100 border-green-500 text-green-700",
-    error: "bg-red-100 border-red-500 text-red-700",
-    info: "bg-blue-100 border-blue-500 text-blue-700",
-    warning: "bg-yellow-100 border-yellow-500 text-yellow-700",
+  const getToastStyles = () => {
+    const baseStyles =
+      "fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transition-all duration-300 transform";
+    const typeStyles = {
+      success: "bg-green-500 text-white",
+      error: "bg-red-500 text-white",
+      warning: "bg-yellow-500 text-black",
+      info: "bg-blue-500 text-white",
+    };
+    return `${baseStyles} ${typeStyles[type]}`;
   };
 
+  React.useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
   return (
-    <div
-      className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 border-l-4 rounded shadow-lg animate-slide-in ${bgColor[type]}`}
-    >
-      <span className="text-sm font-medium">{message}</span>
-      <button onClick={onClose}>
-        <XCircle size={18} />
-      </button>
+    <div className={getToastStyles()}>
+      <div className="flex items-center justify-between">
+        <span>{message}</span>
+        <button
+          onClick={onClose}
+          className="ml-4 text-lg font-bold hover:opacity-70"
+        >
+          ×
+        </button>
+      </div>
     </div>
   );
-}
+};
+
+Toast.propTypes = {
+  message: PropTypes.string.isRequired,
+  type: PropTypes.oneOf(["success", "error", "warning", "info"]),
+  isVisible: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
+export default Toast;
