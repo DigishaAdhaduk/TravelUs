@@ -25,7 +25,7 @@ A modern, beautiful group travel management application built with React, TypeSc
 - npm, yarn, or pnpm
 - Your Spring Boot backend running
 
-### Installation
+###  Installation
 
 ```bash
 # Clone the repository
@@ -86,26 +86,26 @@ npm run test         # Run tests
 
 Your Spring Boot backend should implement:
 
-#### Authentication
+####  Authentication
 
 - `POST /api/auth/login`
 - `POST /api/auth/register`
 - `POST /api/auth/logout`
 
-#### Groups
+####  Groups
 
 - `GET /api/groups` - Get user's groups
 - `POST /api/groups` - Create group
 - `GET /api/groups/{id}` - Get group details
 - `POST /api/groups/join/{code}` - Join group
 
-#### Expenses
+####  Expenses
 
 - `GET /api/groups/{id}/expenses` - Get group expenses
 - `POST /api/groups/{id}/expenses` - Create expense
 - `GET /api/groups/{id}/balances` - Get member balances
 
-#### Dashboard
+####  Dashboard
 
 - `GET /api/dashboard/stats` - Get dashboard statistics
 
