@@ -19,7 +19,7 @@ A modern, beautiful group travel management application built with React, TypeSc
 
 ## 🚀   Quick Start
 
-### Prerequisites
+###  Prerequisites
 
 - Node.js 18+
 - npm, yarn, or pnpm
