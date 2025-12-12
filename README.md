@@ -1,4 +1,4 @@
-# TravelUs 🌍✈️
+# TravelUs - Frontend 🌍✈️
 
 A comprehensive group travel management web application that simplifies travel planning by bringing all your travel needs into one unified platform.
 
