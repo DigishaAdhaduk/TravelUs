@@ -1,248 +1,236 @@
-# TravelUs Frontend
+# TravelUs 🌍✈️
 
-A modern, beautiful group travel management application built with React, TypeScript, and Tailwind CSS.
+A comprehensive group travel management web application that simplifies travel planning by bringing all your travel needs into one unified platform.
 
-![TravelUs](https://img.shields.io/badge/TravelUs-Frontend-blue)
-![React](https://img.shields.io/badge/React-18.3.1-blue)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-blue)
-![Tailwind](https://img.shields.io/badge/Tailwind-3.4.11-blue)
+## 📋 Table of Contents
 
-## ✨   Features
+- [About](##about)
+- [Features](#features)
+- [Tech Stack](##tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [API Documentation](#api-documentation)
+- [Development Roadmap](#development-roadmap)
+- [Future Enhancements](#future-enhancements)
+- [Contributing](#contributing)
+- [License](#license)
 
-- 🔐 **Secure Authentication** - JWT-based auth with refresh tokens
-- 🏠 **Modern Dashboard** - Beautiful overview with stats and activity
-- 👥 **Group Management** - Create, join, and manage travel groups
-- 💰 **Expense Tracking** - Split expenses fairly among group members
-- 📱 **Responsive Design** - Perfect on all devices
-- 🎨 **Beautiful UI** - Modern glass-morphism design with smooth animations
-- 🚀 **Performance** - Optimized with code splitting and lazy loading
+## 🎯 About
 
-## 🚀   Quick Start
+TravelUs is a solo-developed group travel management application designed to eliminate the hassle of coordinating group trips. Whether you're planning a family vacation, corporate retreat, or adventure with friends, TravelUs provides all the tools you need to organize, communicate, and manage your travel experience seamlessly.
 
-###  Prerequisites
+### What TravelUs Can Do
 
-- Node.js 18+
-- npm, yarn, or pnpm
-- Your Spring Boot backend running
+- **Centralized Group Management**: Create travel groups and invite members through secure invite links
+- **Document Organization**: Upload and store important travel documents (flight tickets, hotel bookings, etc.) with PDF preview
+- **Smart Expense Tracking**: Track shared expenses with automatic balance calculations and settle-up functionality
+- **Interactive Itinerary Planning**: Create detailed travel itineraries with destinations, dates, and activities
+- **Real-time Communication**: In-group chat system for travel planning
+- **Secure Authentication**: JWT-based user authentication and role-based access control
 
-###  Installation
+## ✨ Features
 
-```bash
-# Clone the repository
-git clone <your-repo-url>
-cd travelus-frontend
+### 👤 User Management
+- User registration and authentication with JWT
+- Profile management and customization
+- Secure group joining via invite links
 
-# Install dependencies
-npm install
+### 👥 Group Management
+- Create and manage travel groups
+- Generate shareable invite links
+- Admin role assignment and permissions
+- Member management and group settings
 
-# Copy environment configuration
-cp .env.example .env
+### 📄 Document Management
+- PDF upload and storage (flight tickets, hotel bookings, visas, etc.)
+- Document preview and organization
+- Cloud storage integration for reliable access
 
-# Edit .env with your backend URL
-# VITE_API_URL=http://localhost:8080/api
+### 📝 Travel Itinerary
+- Add destinations with dates and details
+- Activity planning and scheduling
+- Visual timeline view of your trip
+- Collaborative itinerary editing
 
-# Start development server
-npm run dev
+### 💸 Expense Tracking
+- Record and categorize shared expenses
+- Automatic balance calculations
+- Split expenses among group members
+- Settle-up functionality with payment tracking
+
+### 💬 Communication
+- Real-time group chat
+- Message history and search
+- Implemented using Sockets
+
+## 🛠️ Tech Stack
+
+### Backend
+- **Framework**: Spring Boot (Java)
+- **Security**: Spring Security with JWT authentication
+- **Database**: PostgreSQL with Hibernate/JPA ORM
+- **Build Tool**: Maven
+- **File Storage**: Supabase
+- **Real-time Communication**: WebSocket/STOMP
+- **Testing**: JUnit + Mockito
+
+### Frontend (In Development)
+- **Framework**: React.js
+- **Styling**: TailwindCSS
+- **State Management**: Redux Toolkit
+- **HTTP Client**: Axios
+- **Real-time**: Socket.IO
+- **Notifications**: Firebase
+
+### DevOps & Deployment
+- **Backend Hosting**: Render.com / Railway (planned)
+- **Frontend Hosting**: Vercel / Netlify (planned)
+- **Database**: Supabase
+- **Version Control**: Git + GitHub
+
+## 📂 Project Structure
+
+```
+TravelUs/
+│
+├── backend/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/
+│   │   │   │   └── com/
+│   │   │   │       └── travelus/
+│   │   │   │           └── backend/
+│   │   │   │               ├── config/          # Security & WebSocket configuration
+│   │   │   │               ├── controllers/     # REST API endpoints
+│   │   │   │               ├── dtos/           # Data Transfer Objects
+│   │   │   │               ├── models/         # JPA Entity classes
+│   │   │   │               ├── repositories/   # Data access layer
+│   │   │   │               ├── security/       # JWT & Auth utilities
+│   │   │   │               ├── services/       # Business logic layer
+│   │   │   │               └── utils/          # Helper utilities
+│   │   │   └── resources/
+│   │   │       ├── application.properties      # App configuration
+│   │   │       └── static/                     # Static resources
+│   │   └── test/                               # Unit & integration tests
+│   ├── pom.xml                                 # Maven dependencies
+│   └── target/                                 # Compiled classes (ignored in git)
+│
+└── frontend/                                   # React app (coming soon)
 ```
 
-The app will be available at `http://localhost:5173`
+## 🚀 Getting Started
 
-## 📁   Project Structure
+### Prerequisites
+
+- Java 17 or higher
+- Maven 3.6+
+- PostgreSQL 12+
+- Git
+
+### Installation & Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/travelus.git
+   cd travelus/backend
+   ```
+
+2. **Database Setup**
+   ```bash
+   # Create PostgreSQL database
+   createdb travelus_db
+   
+   # Update application.properties with your database credentials
+   ```
+
+3. **Configure Application Properties**
+   ```properties
+   # refer to application-sample.properties
+   
+   # src/main/resources/application.properties
+   spring.datasource.url=jdbc:postgresql://localhost:5432/travelus_db
+   spring.datasource.username=your_username
+   spring.datasource.password=your_password
+   
+   # JWT Configuration
+   jwt.secret=your_jwt_secret_key
+   jwt.expiration=86400000
+   
+   # File Upload Configuration
+   spring.servlet.multipart.max-file-size=10MB
+   spring.servlet.multipart.max-request-size=10MB
+   ```
+
+4. **Build and Run**
+   ```bash
+   # Using Maven
+   mvn clean install
+   mvn spring-boot:run
+   ```
+
+5. **Verify Installation**
+    - Application will start on `http://localhost:8080`
+    - Access Swagger UI at `http://localhost:8080/swagger-ui.html` (if configured)
+
+## 📚 API Documentation
+
+### Testing the APIs
+
+Since the frontend is currently in development, you can test the APIs using:
+
+**Swagger UI** (Recommended)
+- Navigate to `http://localhost:8080/swagger-ui.html`
+- Interactive API documentation with testing capabilities
+
+**Postman**
+- Import the API collection
+- Base URL: `http://localhost:8080/api`
+
+### Key Endpoints
 
 ```
-src/
-├── components/          # Reusable UI components
-│   ├── layout/         # Layout components (Navbar, Sidebar)
-│   └── ui/             # Base UI components
-├── contexts/           # React contexts (Auth, etc.)
-├── hooks/              # Custom React hooks
-├── lib/                # Utility functions
-├── pages/              # Page components
-│   ├── groups/         # Group-related pages
-│   └── expenses/       # Expense-related pages
-├── services/           # API services
-└── types/              # TypeScript type definitions
+Authentication:
+POST /api/auth/register - User registration
+POST /api/auth/login - User login
+
+Groups:
+GET /api/groups - Get user's groups
+POST /api/groups - Create new group
+GET /api/groups/{id} - Get group details
+POST /api/groups/{id}/invite - Generate invite link
+
+Expenses:
+GET /api/groups/{groupId}/expenses - Get group expenses
+POST /api/groups/{groupId}/expenses - Add new expense
+PUT /api/expenses/{id} - Update expense
+
+Itinerary:
+GET /api/groups/{groupId}/itinerary - Get group itinerary
+POST /api/groups/{groupId}/itinerary - Add itinerary item
 ```
 
-## 🔧   Available Scripts
+## 🔮 Future Enhancements
 
-```bash
-# Development
-npm run dev          # Start development server
+- **Google Maps Integration**: Location tagging and directions
+- **AI-Powered Suggestions**: Smart itinerary recommendations using OpenAI API
+- **Multi-Currency Support**: International travel expense tracking
+- **Offline Capabilities**: Progressive Web App (PWA) functionality
+- **Mobile App**: Native iOS and Android applications
+- **Advanced Analytics**: Travel statistics and insights
 
-# Building
-npm run build        # Build for production
-npm run preview      # Preview production build
+## 🤝 Contributing
 
-# Code Quality
-npm run lint         # Run ESLint
-npm run typecheck    # Run TypeScript checks
-npm run test         # Run tests
-```
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 🌐   Backend Integration
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Required API Endpoints
+## 📄 License
 
-Your Spring Boot backend should implement:
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-####  Authentication
 
-- `POST /api/auth/login`
-- `POST /api/auth/register`
-- `POST /api/auth/logout`
-
-####  Groups
-
-- `GET /api/groups` - Get user's groups
-- `POST /api/groups` - Create group
-- `GET /api/groups/{id}` - Get group details
-- `POST /api/groups/join/{code}` - Join group
-
-####  Expenses
-
-- `GET /api/groups/{id}/expenses` - Get group expenses
-- `POST /api/groups/{id}/expenses` - Create expense
-- `GET /api/groups/{id}/balances` - Get member balances
-
-####  Dashboard
-
-- `GET /api/dashboard/stats` - Get dashboard statistics
-
-### Sample API Response
-
-```json
-{
-  "user": {
-    "id": "uuid",
-    "name": "John Doe",
-    "email": "john@example.com",
-    "username": "johndoe"
-  },
-  "token": "jwt_token_here"
-}
-```
-
-## 🎨   Design System
-
-### Colors
-
-- **Primary**: #192166 (Travel Blue)
-- **Secondary**: #2D1B69 (Travel Purple)
-- **Accent**: #4338ca (Travel Indigo)
-
-### Typography
-
-- **Display**: Lexend (Headings)
-- **Body**: Inter (Body text)
-
-### Components
-
-- Glass-morphism effects
-- Smooth animations with Framer Motion
-- Responsive design patterns
-- Accessible UI components
-
-## 🚀   Deployment
-
-### Vercel (Recommended)
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
-
-# Set environment variables in dashboard
-VITE_API_URL=https://your-api-domain.com/api
-```
-
-### Netlify
-
-```bash
-# Build command: npm run build
-# Publish directory: dist
-# Environment: VITE_API_URL=your-api-url
-```
-
-### Manual Deployment
-
-```bash
-# Build the project
-npm run build
-
-# Deploy the dist/ folder to your hosting provider
-```
-
-## 🔒   Security Features
-
-- JWT token management with automatic refresh
-- Protected routes with authentication guards
-- Input validation and sanitization
-- XSS protection
-- Secure API communication
-
-## 🧪   Testing
-
-```bash
-# Run unit tests
-npm run test
-
-# Run with coverage
-npm run test:coverage
-
-# Run type checking
-npm run typecheck
-```
-
-## 📊   Performance
-
-- **Code Splitting**: Automatic route-based splitting
-- **Lazy Loading**: Components loaded on demand
-- **Optimized Bundle**: Tree-shaking and minification
-- **Image Optimization**: WebP format with fallbacks
-
-## 🛠️   Development Tips
-
-### API Integration
-
-1. Update `VITE_API_URL` in `.env`
-2. Ensure CORS is configured on your backend
-3. Check network tab for API call debugging
-
-### Adding New Pages
-
-1. Create component in `src/pages/`
-2. Add route in `src/App.tsx`
-3. Add navigation link in `src/components/layout/Sidebar.tsx`
-
-### Styling Guidelines
-
-- Use Tailwind utility classes
-- Follow the design system colors
-- Use the `cn()` utility for conditional classes
-- Implement hover and focus states
-
-## 🤝   Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if needed
-5. Submit a pull request
-
-## 📝   License
-
-This project is licensed under the MIT License.
-
-## 🆘   Support
-
-If you encounter any issues:
-
-1. Check the console for errors
-2. Verify your backend is running
-3. Check API endpoints match the expected format
-4. Review the network tab for failed requests
-
-For additional help, please check the documentation or open an issue.
+⭐ If you found this project helpful, please give it a star!
